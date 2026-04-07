@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>中华锦绣 · 56民族共生图鉴 | 民族地理信息平台</title>
+		<link rel="stylesheet" href="ethnicMAP.css">
+	</head>
+	<body>
+		<div class="bg-decoration">
+			<canvas id="particleCanvas"></canvas>
+		</div>
+
+		<header class="header">
+			<div class="header-container">
+				<div class="header-left">
+					<div class="logo-section">
+						<div class="logo-icon">
+							<svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+								<circle cx="24" cy="24" r="20" fill="#d44c2f" stroke="#ffcd94" stroke-width="2" />
+								<path d="M16 20 L24 12 L32 20 L28 28 L20 28 L16 20Z" fill="#FFE6C7" stroke="#aa2e1e"
+									stroke-width="1.5" />
+								<circle cx="24" cy="20" r="2" fill="#d44c2f" />
+							</svg>
+						</div>
+						<div class="brand-info">
+							<h1 class="main-title">中华锦绣·民族共生图鉴</h1>
+							<div class="subtitle">中国56民族地理信息平台 | 多元一体 美美与共</div>
+						</div>
+					</div>
+				</div>
+				<nav class="header-nav">
+					<a href="#" class="nav-item active"><span>🏠</span><span>民族舆图</span></a>
+					<a href="#" class="nav-item"><span>📜</span><span>文化长廊</span></a>
+					<a href="#" class="nav-item"><span>🏔️</span><span>聚居地</span></a>
+				</nav>
+				<div class="header-right">
+					<div class="system-status">
+						<div class="status-indicator">
+							<span class="status-dot"></span>
+							<span>数据实时同步</span>
+						</div>
+					</div>
+					<div class="datetime-display">
+						<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+							<circle cx="8" cy="8" r="6" stroke="#4285f4" stroke-width="1.2" />
+							<path d="M8 5V8L10 10" stroke="#4285f4" stroke-width="1.2" />
+						</svg>
+						<span id="currentTime"></span>
+					</div>
+					<button class="header-btn notification-btn">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+							<path d="M10 2C7.5 2 6 3.5 6 6V9L4 13H16L14 9V6C14 3.5 12.5 2 10 2Z" stroke="currentColor"
+								stroke-width="1.5" />
+							<path d="M8 13V14C8 15.1 8.9 16 10 16C11.1 16 12 15.1 12 14V13" stroke="currentColor"
+								stroke-width="1.5" />
+						</svg>
+						<span class="notification-badge">3</span>
+					</button>
+					<button class="header-btn fullscreen-btn" onclick="toggleFullscreen()">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+							<path d="M3 7V3H7M13 3H17V7M17 13V17H13M7 17H3V13" stroke="currentColor"
+								stroke-width="1.5" />
+						</svg>
+					</button>
+				</div>
+			</div>
+		</header>
+
+		<div class="container">
+			<!-- 左侧民族总览面板 -->
+			<div class="stats-panel left">
+				<div class="overview-card">
+					<div class="overview-title">📊 核心数据总览</div>
+					<div class="overview-grid">
+						<div class="overview-item">
+							<div class="overview-label">民族总数</div>
+							<div class="overview-value">56<span class="unit">个</span></div>
+							<div class="overview-trend">多元一体</div>
+						</div>
+						<div class="overview-item">
+							<div class="overview-label">少数民族人口</div>
+							<div class="overview-value">1.25<span class="unit">亿</span></div>
+							<div class="overview-trend up">↑ 2.3%</div>
+						</div>
+						<div class="overview-item">
+							<div class="overview-label">民族自治地方</div>
+							<div class="overview-value">155<span class="unit">个</span></div>
+							<div class="overview-trend">覆盖64%国土</div>
+						</div>
+						<div class="overview-item">
+							<div class="overview-label">非遗项目</div>
+							<div class="overview-value">1,557<span class="unit">项</span></div>
+							<div class="overview-trend">国家级名录</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="info-card">
+					<div class="info-title">🌾 民族人口与分布<span class="info-badge">多元一体</span><span
+							class="info-badge">数据示意</span></div>
+					<div class="ethnic-list" id="topEthnicList"></div>
+					<div class="ethnic-list" id="ethnicList"></div>
+					<div style="margin-top:12px; font-size:12px; color:var(--text-muted); text-align:center;">汉族 ·
+						55个少数民族和睦共居</div>
+				</div>
+
+				<div class="region-list">
+					<div class="region-title">🗺️ 民族地理分区</div>
+					<div class="region-item" data-region="东北">
+						<div class="region-dot northeast"></div>
+						<div class="region-info">
+							<div>东北地区</div>
+							<div class="region-detail">满族/朝鲜族/鄂伦春等</div>
+						</div>
+					</div>
+					<div class="region-item" data-region="西北">
+						<div class="region-dot northwest"></div>
+						<div class="region-info">
+							<div>西北地区</div>
+							<div class="region-detail">维吾尔/哈萨克/回族等</div>
+						</div>
+					</div>
+					<div class="region-item" data-region="西南">
+						<div class="region-dot southwest"></div>
+						<div class="region-info">
+							<div>西南地区</div>
+							<div class="region-detail">藏/彝/苗/傣/白等</div>
+						</div>
+					</div>
+					<div class="region-item" data-region="中南">
+						<div class="region-dot southeast"></div>
+						<div class="region-info">
+							<div>中南地区</div>
+							<div class="region-detail">壮/瑶/土家/黎/畲等</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 地图容器 -->
+			<div class="map-container">
+				<svg id="chinaMap" viewBox="0 0 1024 768" preserveAspectRatio="xMidYMid meet"></svg>
+				<canvas id="connectionsCanvas"></canvas>
+				<div class="markers" id="markers"></div>
+			</div>
+
+			<!-- 右侧面板 -->
+			<div class="stats-panel right">
+
+				<div class="cultural-card">
+					<div class="info-title">🏺 非物质文化遗产</div>
+					<div class="festival-item">🎵 新疆维吾尔木卡姆艺术</div>
+					<div class="festival-item">🎭 藏戏 · 青海热贡艺术</div>
+					<div class="festival-item">🎋 苗族古歌 · 侗族大歌</div>
+					<div class="festival-item">🪶 柯尔克孜族史诗《玛纳斯》</div>
+					<div class="festival-item">🏺 景德镇手工制瓷（汉族）</div>
+				</div>
+
+				<div class="info-card">
+					<div class="info-title">🎋 民族节日拾英</div>
+					<div class="festival-item">🏮 泼水节 · 傣族 | 四月</div>
+					<div class="festival-item">🐎 那达慕 · 蒙古族 | 七八月</div>
+					<div class="festival-item">🔥 火把节 · 彝族 | 六月廿四</div>
+					<div class="festival-item">🥻 三月三 · 壮族/黎族 | 农历三月</div>
+					<div class="festival-item">🍶 开斋节 · 回族/维吾尔等</div>
+				</div>
+
+				<div class="info-card">
+					<div class="info-title">📖 民族知识窗</div>
+					<div id="randomEthnicFact">✨ 点击地图上的省份，了解该地区民族分布及特色文化。</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 悬停卡片 -->
+		<div id="mapHoverCard" class="map-hover-card">
+			<div class="hover-card-header">
+				<span class="hover-province-name" id="hoverProvinceName">省份名称</span>
+				<span class="hover-region-badge" id="hoverRegionBadge">区域</span>
+			</div>
+			<div class="hover-card-body">
+				<div class="hover-data-item">
+					<span class="hover-label">📊 地区面积</span>
+					<span class="hover-value" id="hoverProjects">0 m²</span>
+				</div>
+				<div class="hover-data-item">
+					<span class="hover-label">民族构成</span>
+					<span class="hover-value" id="hoverEthnic">多民族聚居</span>
+				</div>
+
+				<div class="hover-data-item">
+					<span class="hover-label">📈 少数民族人口数</span>
+					<span class="hover-value" id="hoverPopulation">0 万</span>
+				</div>
+				<div class="hover-data-item">
+					<span class="hover-label">聚居地区</span>
+					<span class="hover-value" id="hoverProgress"></span>
+				</div>
+			</div>
+			<div class="hover-card-footer">
+				<span class="hover-tip">💡 点击查看详情</span>
+			</div>
+		</div>
+
+		<!-- 详情弹窗 -->
+		<div id="locationPopup" class="location-popup">
+			<div class="popup-header">
+				<h3 id="popupTitle"></h3>
+				<button class="popup-close" id="popupCloseBtn">&times;</button>
+			</div>
+			<div class="popup-content" id="popupDetail"></div>
+		</div>
+
+		<footer class="footer">
+			<div class="footer-container">
+				<div class="footer-left">
+					<div class="footer-brand">
+						<div class="footer-logo">
+							<svg width="32" height="32" viewBox="0 0 48 48" fill="none">
+								<circle cx="24" cy="24" r="20" fill="#d44c2f" stroke="#ffcd94" stroke-width="2" />
+								<path d="M16 20 L24 12 L32 20 L28 28 L20 28 L16 20Z" fill="#FFE6C7" stroke="#aa2e1e"
+									stroke-width="1.5" />
+							</svg>
+						</div>
+						<div class="footer-info">
+							<div class="footer-company">中华文明·和合共生</div>
+							<div class="footer-copyright">© 2025 民族地理信息平台 | 数据来源《中国统计年鉴》</div>
+						</div>
+					</div>
+				</div>
+				<div class="footer-center">
+					<div class="footer-links">
+						<div class="footer-link-group">
+							<div class="footer-link-title">关于平台</div>
+							<a href="#" class="footer-link">平台介绍</a>
+							<a href="#" class="footer-link">数据来源</a>
+							<a href="#" class="footer-link">学术支持</a>
+						</div>
+						<div class="footer-link-group">
+							<div class="footer-link-title">文化传承</div>
+							<a href="#" class="footer-link">非遗名录</a>
+							<a href="#" class="footer-link">民族节日</a>
+							<a href="#" class="footer-link">传统技艺</a>
+						</div>
+						<div class="footer-link-group">
+							<div class="footer-link-title">联系我们</div>
+							<a href="#" class="footer-link">合作咨询</a>
+							<a href="#" class="footer-link">意见建议</a>
+							<a href="#" class="footer-link">加入我们</a>
+						</div>
+					</div>
+				</div>
+				<div class="footer-right">
+					<div class="footer-stats">
+						<div class="footer-stat-item">
+							<span class="footer-stat-label">🌐 在线访问</span>
+							<span class="footer-stat-value" id="onlineUsers">128</span>
+						</div>
+						<div class="footer-stat-item">
+							<span class="footer-stat-label">📊 今日更新</span>
+							<span class="footer-stat-value">24 条数据</span>
+						</div>
+						<div class="footer-stat-item">
+							<span class="footer-stat-label">❤️ 民族团结</span>
+							<span class="footer-stat-value online">
+								<span class="status-dot-small"></span> 和谐共生
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<script src="ethnicMAP.js"></script>
+	</body>
+</html>
